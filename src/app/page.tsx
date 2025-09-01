@@ -1,26 +1,25 @@
-import prisma from "@/lib/db";
-import { trpc } from "@/trpc/client";
-import { caller } from "@/trpc/server";
+"use client";
 
-export default async function Page() {
-  const data = await caller.hello({ text: "kartik bhatt" });
-  const user = await prisma.user.findMany();
-  const posts = await prisma.post.findMany();
+import { Button } from "@/components/ui/button";
+import { trpc } from "@/trpc/client";
+import { toast } from "sonner";
+
+export default function Page() {
+  const invoke = trpc.invoke.useMutation({
+    onSuccess: () => toast.success("Backgriund Job Started"),
+  });
+
   return (
-    <div>
-      {JSON.stringify(user)} {JSON.stringify(posts)}
-      {JSON.stringify(data)}
+    <div className="p-4">
+      <Button
+        onClick={() => invoke.mutate({ text: "kartik" })}
+        disabled={invoke.isPending}
+      >
+        click me
+      </Button>
+
+      {invoke.error && <p>Error: {invoke.error.message}</p>}
+      {invoke.isSuccess && <p>Job sent successfully!</p>}
     </div>
   );
 }
-
-// "use client";
-
-// import { trpc } from "@/trpc/client";
-
-// export default function Page() {
-//   const { data, isLoading } = trpc.hello.useQuery({ text: "world" });
-
-//   if (isLoading) return <div>Loading...</div>;
-//   return <div>{JSON.stringify(data)}</div>;
-// }

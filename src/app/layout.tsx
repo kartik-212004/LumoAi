@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TRPCProvider } from "@/trpc/client";
+import { HydrateClient } from "@/trpc/server";
+import { ErrorBoundary } from "react-error-boundary";
+import { Suspense } from "react";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +33,13 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          <HydrateClient>
+            <ErrorBoundary fallback={<div>Something went wrong</div>}>
+              <Suspense fallback={<div>Loading...</div>}></Suspense>
+            </ErrorBoundary>
+          </HydrateClient>
           {children}
+          <Toaster />
         </body>
       </html>
     </TRPCProvider>
