@@ -25,6 +25,8 @@ model Message {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   Fragment  Fragment?
+  projectId String?
+  Project   Project?    @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 model Fragment {
@@ -34,4 +36,12 @@ model Fragment {
   sandboxUrl String
   title      String
   files      Json
+}
+
+model Project {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  message   Message[]
 }
