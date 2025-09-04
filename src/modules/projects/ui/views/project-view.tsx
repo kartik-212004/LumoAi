@@ -1,22 +1,23 @@
 "use client";
 
-import { trpc } from "@/trpc/client";
 import {
   ResizableHandle,
   ResizablePanelGroup,
   ResizablePanel,
 } from "@/components/ui/resizable";
-import { Suspense } from "react";
-import MessagesContainer from "./components/messages-container";
+import { Suspense, useState } from "react";
+import MessagesContainer from "../components/messages-container";
+import { Fragment } from "@prisma/client";
+import ProjectHeader from "../components/project-header";
 
 interface Props {
   projectId: string;
 }
 
 export default function ProjectView({ projectId }: Props) {
-  const [project] = trpc.projects.getOne.useSuspenseQuery({
-    id: projectId,
-  });
+  const [activeFragment, setActiveFragment] =
+    useState<Fragment | null>(null);
+ 
 
   return (
     <div className="h-screen">
@@ -26,8 +27,15 @@ export default function ProjectView({ projectId }: Props) {
           minSize={20}
           className="flex- flex-col min-h-0"
         >
+          <Suspense fallback={<div>Loading...</div>}>
+            <ProjectHeader projectId={projectId} />
+          </Suspense>
           <Suspense fallback={<div>Loading Messages...</div>}>
-            <MessagesContainer projectId={projectId} />
+            <MessagesContainer
+              activeFragment={activeFragment}
+              projectId={projectId}
+              setActiveFragment={setActiveFragment}
+            />
           </Suspense>
         </ResizablePanel>
         <ResizableHandle withHandle />

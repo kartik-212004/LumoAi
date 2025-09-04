@@ -6,6 +6,7 @@ import { HydrateClient } from "@/trpc/server";
 import { ErrorBoundary } from "react-error-boundary";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <TRPCProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
@@ -37,9 +38,17 @@ export default function RootLayout({
             <ErrorBoundary fallback={<div>Something went wrong</div>}>
               <Suspense fallback={<div>Loading...</div>}></Suspense>
             </ErrorBoundary>
+
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Toaster />
+              {children}
+            </ThemeProvider>
           </HydrateClient>
-          {children}
-          <Toaster />
         </body>
       </html>
     </TRPCProvider>

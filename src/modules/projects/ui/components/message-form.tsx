@@ -30,7 +30,7 @@ export const MessageForm = ({ projectId }: Props) => {
   });
 
   const createMessage = trpc.messages.create.useMutation({
-    onSuccess(data) {
+    onSuccess() {
       form.reset();
       utils.messages.getMany.invalidate({
         projectId: projectId,

@@ -8,7 +8,7 @@ export const projectsRouter = createTRPCRouter({
   getOne: baseProcedure
     .input(z.object({ id: z.string().min(1, "Id is Required") }))
     .query(async ({ input }) => {
-      const existingProjects = await prisma.project.findMany({
+      const existingProjects = await prisma.project.findUnique({
         where: {
           id: input.id,
         },
