@@ -27,25 +27,25 @@ export default function MessagesContainer({
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  // useEffect(() => {
-  //   const lastAssistantMessage = messages.findLast(
-  //     (message) => message.role === "ASSISTANT" && !!message.Fragment
-  //   );
+  useEffect(() => {
+    const lastAssistantMessage = messages.findLast(
+      (message) => message.role === "ASSISTANT" && !!message.Fragment
+    );
 
-  //   if (lastAssistantMessage) {
-  //     setActiveFragment(lastAssistantMessage.Fragment);
-  //   }
-  // }, [messages, setActiveFragment]);
+    if (lastAssistantMessage && lastAssistantMessage.Fragment) {
+      setActiveFragment(lastAssistantMessage.Fragment);
+    }
+  }, [messages, setActiveFragment]);
 
-  // useEffect(() => {
-  //   bottomRef.current?.scrollIntoView();
-  // }, [messages.length]);
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView();
+  }, [messages.length]);
 
   const lastMessage = messages[messages.length - 1];
   const isLastMessageUser = lastMessage?.role === "USER";
 
   return (
-    <div className="flex flex-col min-h-0 ">
+    <div className="flex flex-col h-full min-h-0">
       <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="pt-2 pr-1">
           {messages.map((message) => (
@@ -58,7 +58,7 @@ export default function MessagesContainer({
               isActiveFragment={
                 activeFragment?.id === message.Fragment?.id
               }
-              onFragmentClick={() => {}}
+              onFragmentClick={(fragment) => setActiveFragment(fragment)}
               type={message.type}
             />
           ))}
@@ -66,8 +66,8 @@ export default function MessagesContainer({
           <div ref={bottomRef} />
         </div>
       </div>
-      <div className="relative p-3 pt-1">
-        <div className="absolute -top-6 left-0 right-0 h-6 bg-gradient-to-b from-transparent to-background/70 pointer-events-auto" />
+      <div className="flex-shrink-0 relative p-3 pt-1 bg-background border-t">
+        <div className="absolute -top-6 left-0 right-0 h-6 bg-gradient-to-b from-transparent to-background/70 pointer-events-none" />
         <MessageForm projectId={projectId} />
       </div>
     </div>

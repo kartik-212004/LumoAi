@@ -29,7 +29,6 @@ export default function Hint({
           <p>{text}</p>
         </TooltipContent>
       </Tooltip>
-      ;
     </TooltipProvider>
   );
 }
