@@ -9,6 +9,7 @@ import { Suspense, useState } from "react";
 import MessagesContainer from "../components/messages-container";
 import { Fragment } from "@prisma/client";
 import ProjectHeader from "../components/project-header";
+import FragmentWeb from "../components/fragment-web";
 
 interface Props {
   projectId: string;
@@ -17,7 +18,6 @@ interface Props {
 export default function ProjectView({ projectId }: Props) {
   const [activeFragment, setActiveFragment] =
     useState<Fragment | null>(null);
- 
 
   return (
     <div className="h-screen">
@@ -40,7 +40,7 @@ export default function ProjectView({ projectId }: Props) {
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={65} minSize={50}>
-          TODO: Preview
+          {activeFragment && <FragmentWeb data={activeFragment} />}
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
