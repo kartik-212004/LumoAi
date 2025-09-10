@@ -1,4 +1,4 @@
-import { CopyCheckIcon, CopyIcon, Divide } from "lucide-react";
+import { CopyCheckIcon, CopyIcon } from "lucide-react";
 import { useState, useMemo, useCallback, Fragment } from "react";
 import Hint from "./hint";
 import { Button } from "./ui/button";
@@ -14,7 +14,6 @@ import {
   Breadcrumb,
   BreadcrumbList,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
@@ -50,14 +49,16 @@ const FileBreadcrumb = ({ filePath }: FileBreadcrumbProps) => {
           <Fragment key={index}>
             <BreadcrumbItem>
               {isLast ? (
-                <Breadcrumb className="font-medium"></Breadcrumb>
+                <BreadcrumbPage className="font-medium">
+                  {segment}
+                </BreadcrumbPage>
               ) : (
                 <span className="text-muted-foreground">
                   {segment}
                 </span>
               )}
             </BreadcrumbItem>
-            {isLast && <BreadcrumbSeparator />}
+            {!isLast && <BreadcrumbSeparator />}
           </Fragment>
         );
       });
@@ -129,7 +130,7 @@ export default function FileExplorer({ files }: FileExplorerProps) {
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel
         defaultSize={30}
-        minSize={30}
+        minSize={20}
         className="bg-sidebar"
       >
         <TreeView
@@ -137,11 +138,12 @@ export default function FileExplorer({ files }: FileExplorerProps) {
           value={selectedFile}
           onSelect={handleFileSelect}
         />
-        <ResizableHandle className="hover:bg-primary transition-colors" />
-        <ResizablePanel defaultSize={70} minSize={50}>
-          {selectedFile && files[selectedFile] ? (
-            <div className="h-full w-full lex flex-col">
-              <div className="border-b bg-sidebar px-4 py-2 flex justify-between items-center gap-x-2 ">
+      </ResizablePanel>
+      <ResizableHandle className="hover:bg-primary transition-colors" />
+      <ResizablePanel defaultSize={70} minSize={50}>
+        {selectedFile && files[selectedFile] ? (
+          <div className="h-full w-full flex flex-col">
+            <div className="border-b bg-sidebar px-4 py-2 flex justify-between items-center gap-x-2">
                 <FileBreadcrumb filePath={selectedFile} />
                 <Hint text="Copy to clipboard" side="bottom">
                   <Button
@@ -168,7 +170,6 @@ export default function FileExplorer({ files }: FileExplorerProps) {
             </div>
           )}
         </ResizablePanel>
-      </ResizablePanel>
     </ResizablePanelGroup>
   );
 }
