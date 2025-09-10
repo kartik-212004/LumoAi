@@ -32,7 +32,7 @@ export const codeAgentFunction = inngest.createFunction(
       description: "An expert coding agent",
       system: PROMPT,
       model: openai({
-        model: "gpt-4",
+        model: "gpt-4o",
         defaultParameters: { temperature: 0.1 },
       }),
       tools: [
@@ -68,7 +68,7 @@ export const codeAgentFunction = inngest.createFunction(
         }),
         createTool({
           name: "createOrUpdateFiles",
-          description: "Creae or update files in the sandbox",
+          description: "Create or update files in the sandbox",
           parameters: z.object({
             files: z.array(
               z.object({
