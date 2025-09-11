@@ -46,3 +46,9 @@ model Project {
   updatedAt DateTime  @updatedAt
   message   Message[]
 }
+
+model Usage {
+  key    String    @id
+  points Int
+  expire DateTime?
+}

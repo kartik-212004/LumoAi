@@ -62,6 +62,7 @@
     "prisma": "^6.15.0",
     "prismjs": "^1.30.0",
     "random-word-slugs": "^0.1.7",
+    "rate-limiter-flexible": "^7.3.0",
     "react": "19.1.0",
     "react-day-picker": "^9.9.0",
     "react-dom": "19.1.0",

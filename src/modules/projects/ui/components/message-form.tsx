@@ -9,6 +9,8 @@ import TextareaAutosize from "react-textarea-autosize";
 import { trpc } from "@/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
+import { useRouter } from "next/navigation";
+import Usage from "@/components/usage";
 interface Props {
   projectId: string;
 }
@@ -22,6 +24,9 @@ const formSchema = z.object({
 
 export const MessageForm = ({ projectId }: Props) => {
   const utils = trpc.useUtils();
+  const { data } = trpc.usage.status.useQuery();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,9 +40,12 @@ export const MessageForm = ({ projectId }: Props) => {
       utils.messages.getMany.invalidate({
         projectId: projectId,
       });
+      utils.usage.status.queryOptions();
     },
     onError(error) {
       toast.error(error.message);
+      if (error.data?.code === "TOO_MANY_REQUESTS")
+        router.push("/pricing");
     },
   });
 
@@ -49,12 +57,18 @@ export const MessageForm = ({ projectId }: Props) => {
   };
 
   const [isFocused, setIsFocused] = useState(false);
-  const showUsage = false;
+  const showUsage = !!data;
   const isPending = createMessage.isPending;
   const isButtonDisabled = isPending || !form.formState.isValid;
 
   return (
     <Form {...form}>
+      {showUsage && data && (
+        <Usage
+          points={data.remainingPoints}
+          msBeforeNext={data.msBeforeNext}
+        />
+      )}
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn(
