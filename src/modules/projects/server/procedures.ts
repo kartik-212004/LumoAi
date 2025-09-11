@@ -1,7 +1,6 @@
 import { inngest } from "@/inngest/client";
 import prisma from "@/lib/db";
 import {
-  baseProcedure,
   createTRPCRouter,
   protectedProcedure,
 } from "@/trpc/init";
@@ -35,7 +34,7 @@ export const projectsRouter = createTRPCRouter({
     });
     return projects;
   }),
-  create: baseProcedure
+  create: protectedProcedure
     .input(
       z.object({
         value: z
@@ -45,13 +44,6 @@ export const projectsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      if (!ctx.auth.userId) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "User not authenticated",
-        });
-      }
-
       const createdProject = await prisma.project.create({
         data: {
           userId: ctx.auth.userId,
