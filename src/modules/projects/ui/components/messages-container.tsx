@@ -24,7 +24,7 @@ export default function MessagesContainer({
     },
     { refetchInterval: 5000 }
   );
-
+  const lastAssistantMessageIdRef = useRef<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,8 +32,13 @@ export default function MessagesContainer({
       (message) => message.role === "ASSISTANT" && !!message.Fragment
     );
 
-    if (lastAssistantMessage && lastAssistantMessage.Fragment) {
+    if (
+      lastAssistantMessage?.id !==
+        lastAssistantMessageIdRef.current &&
+      lastAssistantMessage?.Fragment
+    ) {
       setActiveFragment(lastAssistantMessage.Fragment);
+      lastAssistantMessageIdRef.current = lastAssistantMessage.id;
     }
   }, [messages, setActiveFragment]);
 
@@ -58,7 +63,9 @@ export default function MessagesContainer({
               isActiveFragment={
                 activeFragment?.id === message.Fragment?.id
               }
-              onFragmentClick={(fragment) => setActiveFragment(fragment)}
+              onFragmentClick={(fragment) =>
+                setActiveFragment(fragment)
+              }
               type={message.type}
             />
           ))}
