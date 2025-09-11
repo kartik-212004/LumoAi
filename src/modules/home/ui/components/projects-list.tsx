@@ -5,14 +5,20 @@ import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/trpc/client";
+import { useUser } from "@clerk/nextjs";
 
 export default function ProjectsList() {
-  const { data: projects = [], isLoading } =
-    trpc.projects.getMany.useQuery();
+  const { user } = useUser();
+
+  const { data: projects = [] } = trpc.projects.getMany.useQuery();
+
+  if (!user) return null;
 
   return (
     <div className="w-full bg-white dark:bg-sidebar rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4">
-      <h2 className="text-2xl font-semibold">Saved Projects</h2>
+      <h2 className="text-2xl font-semibold">
+        {user?.firstName}&apos; Lumo
+      </h2>
       <div className="grid grid-col-1 sm:grid-cols-3 gap-6">
         {projects.length === 0 && (
           <div className="col-span-full text-center">

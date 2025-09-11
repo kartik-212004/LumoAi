@@ -1,16 +1,21 @@
 import { inngest } from "@/inngest/client";
 import prisma from "@/lib/db";
-import { baseProcedure, createTRPCRouter } from "@/trpc/init";
+import {
+  baseProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "@/trpc/init";
 import z from "zod";
 import { generateSlug } from "random-word-slugs";
 import { TRPCError } from "@trpc/server";
 export const projectsRouter = createTRPCRouter({
-  getOne: baseProcedure
+  getOne: protectedProcedure
     .input(z.object({ id: z.string().min(1, "Id is Required") }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       const existingProjects = await prisma.project.findUnique({
         where: {
           id: input.id,
+          userId: ctx.auth.userId,
         },
       });
       if (!existingProjects) {
@@ -21,8 +26,9 @@ export const projectsRouter = createTRPCRouter({
       }
       return existingProjects;
     }),
-  getMany: baseProcedure.query(async () => {
+  getMany: protectedProcedure.query(async ({ ctx }) => {
     const projects = await prisma.project.findMany({
+      where: { userId: ctx.auth.userId },
       orderBy: {
         updatedAt: "asc",
       },
@@ -38,9 +44,17 @@ export const projectsRouter = createTRPCRouter({
           .max(1000, { message: "Message is too long" }),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.auth.userId) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User not authenticated",
+        });
+      }
+
       const createdProject = await prisma.project.create({
         data: {
+          userId: ctx.auth.userId,
           name: generateSlug(2, { format: "kebab" }),
           message: {
             create: {

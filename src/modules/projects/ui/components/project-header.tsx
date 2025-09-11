@@ -1,12 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useSuspenseQuery } from "@tanstack/react-query";
 
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
-  EditIcon,
   SunMoonIcon,
 } from "lucide-react";
 
@@ -18,19 +16,14 @@ import {
   DropdownMenuPortal,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
   DropdownMenuItem,
-  DropdownMenuCheckboxItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
 
 interface Props {
   projectId: string;

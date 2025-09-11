@@ -7,6 +7,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "next-themes";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,28 +30,32 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <TRPCProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <HydrateClient>
-            <ErrorBoundary fallback={<div>Something went wrong</div>}>
-              <Suspense fallback={<div>Loading...</div>}></Suspense>
-            </ErrorBoundary>
+    <ClerkProvider>
+      <TRPCProvider>
+        <html lang="en" suppressHydrationWarning>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <HydrateClient>
+              <ErrorBoundary
+                fallback={<div>Something went wrong</div>}
+              >
+                <Suspense fallback={<div>Loading...</div>}></Suspense>
+              </ErrorBoundary>
 
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Toaster />
-              {children}
-            </ThemeProvider>
-          </HydrateClient>
-        </body>
-      </html>
-    </TRPCProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Toaster />
+                {children}
+              </ThemeProvider>
+            </HydrateClient>
+          </body>
+        </html>
+      </TRPCProvider>
+    </ClerkProvider>
   );
 }
