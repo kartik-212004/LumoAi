@@ -46,14 +46,28 @@ export const projectsRouter = createTRPCRouter({
         await consumeCredits();
       } catch (error) {
         if (error instanceof Error) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "something went wrong",
-          });
+          if (error.message === "User not authenticated") {
+            throw new TRPCError({
+              code: "UNAUTHORIZED",
+              message: "User not authenticated",
+            });
+          } else if (error.message === "Rate limit exceeded") {
+            throw new TRPCError({
+              code: "TOO_MANY_REQUESTS",
+              message: "You have run out of credits. Please upgrade to Pro or wait for your credits to reset.",
+            });
+          } else {
+            // Log the actual error for debugging
+            console.error("Credit consumption error:", error);
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Failed to check credits",
+            });
+          }
         } else {
           throw new TRPCError({
-            code: "TOO_MANY_REQUESTS",
-            message: "You have run out of credits",
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Unknown error occurred",
           });
         }
       }
