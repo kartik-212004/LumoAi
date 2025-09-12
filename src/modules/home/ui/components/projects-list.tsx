@@ -15,39 +15,43 @@ export default function ProjectsList() {
   if (!user) return null;
 
   return (
-    <div className="w-full bg-white dark:bg-sidebar rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4">
-      <h2 className="text-2xl font-semibold">
-        {user?.firstName ? `${user.firstName}'s Lumo` : "Your Lumo"}
+    <div className="w-full bg-card/50 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-border/50 shadow-sm">
+      <h2 className="text-xl md:text-2xl font-semibold mb-6 text-foreground/90">
+        {user?.firstName ? `${user.firstName}'s Projects` : "Your Projects"}
       </h2>
-      <div className="grid grid-col-1 sm:grid-cols-3 gap-6">
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {projects.length === 0 && (
-          <div className="col-span-full text-center">
-            <p className="text-sm text-muted-foreground">
-              No Projects found
+          <div className="col-span-full text-center py-12">
+            <p className="text-muted-foreground">
+              No projects yet. Start building something amazing!
             </p>
           </div>
         )}
+        
         {projects?.map((project) => (
           <Button
             key={project.id}
-            variant="outline"
+            variant="ghost"
             asChild
-            className="font-normal h-auto justify-start w-full text-start  p-4"
+            className="h-auto p-4 justify-start hover:bg-muted/50 transition-colors duration-200 rounded-xl border border-transparent hover:border-border/50"
           >
             <Link href={`/projects/${project.id}`}>
-              <div className="flex items-center gap-x-4">
-                <Image
-                  src="/logo.svg"
-                  alt="lumo"
-                  width={32}
-                  height={32}
-                  className="object-contain"
-                />
-                <div className="flex flex-col ">
-                  <h3 className="truncate font-medium">
+              <div className="flex items-center gap-3 w-full">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Image
+                    src="/logo.svg"
+                    alt="lumo"
+                    width={20}
+                    height={20}
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex flex-col flex-1 min-w-0">
+                  <h3 className="truncate font-medium text-sm">
                     {project.name}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     {formatDistanceToNow(project.updatedAt, {
                       addSuffix: true,
                     })}
