@@ -5,6 +5,7 @@ export const inngest = new Inngest({
   id: "Lumo",
   eventKey: process.env.INNGEST_EVENT_KEY,
   signingKey: process.env.INNGEST_SIGNING_KEY,
+  isDev: process.env.NODE_ENV === "development",
   retries: 3,
 
   // Add logging for debugging
