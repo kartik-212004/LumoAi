@@ -21,7 +21,7 @@ export function ThemeSwitcher() {
     }, []);
 
     const renderIcon = () => {
-        const mode = mounted && theme ? theme : "system";
+        const mode = mounted && theme ? theme : "light";
         if (mode === "light") return <SunIcon className="h-4 w-4" />;
         if (mode === "dark") return <MoonStarIcon className="h-4 w-4" />;
         return <MonitorIcon className="h-4 w-4" />;
