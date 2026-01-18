@@ -33,9 +33,9 @@ export const ProjectForm = () => {
   });
 
   const createProject = trpc.projects.create.useMutation({
-    onSuccess(data) {
-      utils.projects.getMany.invalidate();
-      utils.usage.status.queryOptions();
+    async onSuccess(data) {
+      await utils.projects.getMany.invalidate();
+      await utils.usage.status.invalidate();
       router.push(`/projects/${data.id}`);
     },
     onError(error) {
